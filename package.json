@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Application for back-end.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fullbranas/server.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "hotequil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fullbranas/server/issues"
+  },
+  "homepage": "https://github.com/fullbranas/server#readme",
+  "dependencies": {
+    "apollo-server": "^3.5.0"
+  }
+}
