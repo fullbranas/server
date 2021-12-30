@@ -13,8 +13,7 @@ const typeDefs = `
     }
     
     type Query {
-        prefixes: [PieceOfDomain]
-        sufixes: [PieceOfDomain]
+        pieces(type: String): [PieceOfDomain]
     }
 `;
 
@@ -27,8 +26,7 @@ const items = [
 
 const resolvers = {
     Query: {
-        prefixes: () => items.filter(item => item.type === KEYWORDS.PREFIX),
-        sufixes: () => items.filter(item => item.type === KEYWORDS.SUFIX)
+        pieces: (_, params) => items.filter(item => item.type === params.type)
     }
 };
 
