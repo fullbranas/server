@@ -31,10 +31,18 @@ const typeDefs = `
         available: Boolean
     }
     
+    type DomainDetail{
+        link: String
+        available: Boolean
+        prefix: String
+        suffix: String
+    }
+    
     type Mutation {
         save(item: PieceOfDomainInput): PieceOfDomain
         delete(id: Int): Boolean
-        domains: [Domain]
+        domains: [Domain],
+        domainDetail(name: String): DomainDetail
     }
 `;
 
@@ -70,16 +78,31 @@ const resolvers = {
             const suffixes = items.filter(item => item.type === KEYWORDS.SUFFIX);
 
             for(const prefix of prefixes){
+                const prefixText = prefix.text;
+
                 for(const suffix of suffixes){
-                    const name = `${prefix.text}${suffix.text}${FINAL_DOMAIN}`.toLowerCase();
+                    const suffixText = suffix.text;
+                    const name = `${prefixText}${suffixText}${FINAL_DOMAIN}`.toLowerCase();
                     const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
                     const available = await isDomainAvailable(name);
 
-                    domains.push({ name, link, available });
+                    domains.push({ name, link, available, prefix: prefixText, suffix: suffixText });
                 }
             }
 
             return domains;
+        },
+        async domainDetail(_, { name }){
+            if(!name) return null;
+
+            const domains = await this.domains();
+            const domain = domains.find(item => item.name === name);
+
+            if(!domain) return null;
+
+            const { link, available, prefix, suffix } = domain;
+
+            return { link, available, prefix, suffix };
         }
     }
 };
