@@ -15,6 +15,16 @@ const typeDefs = `
     type Query {
         pieces(type: String): [PieceOfDomain]
     }
+    
+    input PieceOfDomainInput {
+        type: String
+        text: String
+    }
+    
+    type Mutation {
+        save(item: PieceOfDomainInput): PieceOfDomain
+        delete(id: Int): Boolean
+    }
 `;
 
 const items = [
@@ -27,6 +37,22 @@ const items = [
 const resolvers = {
     Query: {
         pieces: (_, params) => items.filter(item => item.type === params.type)
+    },
+    Mutation: {
+        save(_, { item }){
+            item.id = items[items.length - 1]?.id + 1 || 1;
+
+            items.push(item);
+
+            return item;
+        },
+        delete(_, { id }){
+            const ids = items.map(item => item.id);
+
+            items.splice(ids.indexOf(id), 1);
+
+            return true;
+        }
     }
 };
 
