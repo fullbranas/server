@@ -1,9 +1,12 @@
 const { ApolloServer } = require("apollo-server");
+const dns = require('dns');
 
 const KEYWORDS = {
     PREFIX: "prefix",
-    SUFIX: "sufix"
+    SUFFIX: "suffix"
 };
+
+const isDomainAvailable = url => new Promise(resolve => dns.resolve(url, error => resolve(!!error)));
 
 const typeDefs = `
     type PieceOfDomain {
@@ -24,6 +27,7 @@ const typeDefs = `
     type Domain {
         name: String
         link: String
+        available: Boolean
     }
     
     type Mutation {
@@ -36,8 +40,8 @@ const typeDefs = `
 const items = [
     { id: 1, text: "Am", type: KEYWORDS.PREFIX },
     { id: 2, text: "Po", type: KEYWORDS.PREFIX },
-    { id: 3, text: "Se", type: KEYWORDS.SUFIX },
-    { id: 4, text: "Ji", type: KEYWORDS.SUFIX }
+    { id: 3, text: "Se", type: KEYWORDS.SUFFIX },
+    { id: 4, text: "Ji", type: KEYWORDS.SUFFIX }
 ];
 
 const resolvers = {
@@ -59,20 +63,19 @@ const resolvers = {
 
             return true;
         },
-        domains(){
+        async domains(){
             const domains = [];
             const prefixes = items.filter(item => item.type === KEYWORDS.PREFIX);
-            const sufixes = items.filter(item => item.type === KEYWORDS.SUFIX);
+            const suffixes = items.filter(item => item.type === KEYWORDS.SUFFIX);
 
-            for(const index in prefixes){
-                const prefix = prefixes[index].text;
-
-                sufixes.forEach(sufix => {
-                    const name = `${prefix}${sufix.text}`;
+            for(const prefix of prefixes){
+                for(const suffix of suffixes){
+                    const name = `${prefix.text}${suffix.text}.com`.toLowerCase();
                     const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
+                    const available = await isDomainAvailable(name);
 
-                    domains.push({ name, link });
-                });
+                    domains.push({ name, link, available });
+                }
             }
 
             return domains;
