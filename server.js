@@ -1,5 +1,6 @@
 const { ApolloServer } = require("apollo-server");
 const dns = require('dns');
+const FINAL_DOMAIN = '.com';
 
 const KEYWORDS = {
     PREFIX: "prefix",
@@ -70,7 +71,7 @@ const resolvers = {
 
             for(const prefix of prefixes){
                 for(const suffix of suffixes){
-                    const name = `${prefix.text}${suffix.text}.com`.toLowerCase();
+                    const name = `${prefix.text}${suffix.text}${FINAL_DOMAIN}`.toLowerCase();
                     const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
                     const available = await isDomainAvailable(name);
 
