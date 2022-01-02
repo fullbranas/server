@@ -83,7 +83,7 @@ const resolvers = {
                 for(const suffix of suffixes){
                     const suffixText = suffix.text;
                     const name = `${prefixText}${suffixText}${FINAL_DOMAIN}`.toLowerCase();
-                    const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
+                    const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=${FINAL_DOMAIN}&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
                     const available = await isDomainAvailable(name);
 
                     domains.push({ name, link, available, prefix: prefixText, suffix: suffixText });
