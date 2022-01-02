@@ -21,9 +21,15 @@ const typeDefs = `
         text: String
     }
     
+    type Domain {
+        name: String
+        link: String
+    }
+    
     type Mutation {
         save(item: PieceOfDomainInput): PieceOfDomain
         delete(id: Int): Boolean
+        domains: [Domain]
     }
 `;
 
@@ -52,6 +58,24 @@ const resolvers = {
             items.splice(ids.indexOf(id), 1);
 
             return true;
+        },
+        domains(){
+            const domains = [];
+            const prefixes = items.filter(item => item.type === KEYWORDS.PREFIX);
+            const sufixes = items.filter(item => item.type === KEYWORDS.SUFIX);
+
+            for(const index in prefixes){
+                const prefix = prefixes[index].text;
+
+                sufixes.forEach(sufix => {
+                    const name = `${prefix}${sufix.text}`;
+                    const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
+
+                    domains.push({ name, link });
+                });
+            }
+
+            return domains;
         }
     }
 };
