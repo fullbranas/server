@@ -46,12 +46,7 @@ const typeDefs = `
     }
 `;
 
-const items = [
-    { id: 1, text: "Am", type: KEYWORDS.PREFIX },
-    { id: 2, text: "Po", type: KEYWORDS.PREFIX },
-    { id: 3, text: "Se", type: KEYWORDS.SUFFIX },
-    { id: 4, text: "Ji", type: KEYWORDS.SUFFIX }
-];
+const items = [];
 
 const resolvers = {
     Query: {
