@@ -1,6 +1,6 @@
 const { ApolloServer } = require("apollo-server");
 const dns = require('dns');
-const { get, create } = require("./service");
+const { get, create, destroy } = require("./service");
 const FINAL_DOMAIN = '.com';
 
 const KEYWORDS = {
@@ -47,8 +47,6 @@ const typeDefs = `
     }
 `;
 
-const items = [];
-
 const resolvers = {
     Query: {
         pieces: async (_, params) => await get(params.type)
@@ -59,10 +57,8 @@ const resolvers = {
 
             return newItem;
         },
-        delete(_, { id }){
-            const ids = items.map(item => item.id);
-
-            items.splice(ids.indexOf(id), 1);
+        async delete(_, { id }){
+            await destroy(id);
 
             return true;
         },
