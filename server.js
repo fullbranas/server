@@ -1,6 +1,6 @@
 const { ApolloServer } = require("apollo-server");
 const dns = require('dns');
-const { get } = require("./service");
+const { get, create } = require("./service");
 const FINAL_DOMAIN = '.com';
 
 const KEYWORDS = {
@@ -54,12 +54,10 @@ const resolvers = {
         pieces: async (_, params) => await get(params.type)
     },
     Mutation: {
-        save(_, { item }){
-            item.id = items[items.length - 1]?.id + 1 || 1;
+        async save(_, { item }){
+            const [newItem] = await create(item);
 
-            items.push(item);
-
-            return item;
+            return newItem;
         },
         delete(_, { id }){
             const ids = items.map(item => item.id);
