@@ -1,5 +1,6 @@
 const { ApolloServer } = require("apollo-server");
 const dns = require('dns');
+const { get } = require("./service");
 const FINAL_DOMAIN = '.com';
 
 const KEYWORDS = {
@@ -50,7 +51,7 @@ const items = [];
 
 const resolvers = {
     Query: {
-        pieces: (_, params) => items.filter(item => item.type === params.type)
+        pieces: async (_, params) => await get(params.type)
     },
     Mutation: {
         save(_, { item }){
@@ -69,8 +70,8 @@ const resolvers = {
         },
         async domains(){
             const domains = [];
-            const prefixes = items.filter(item => item.type === KEYWORDS.PREFIX);
-            const suffixes = items.filter(item => item.type === KEYWORDS.SUFFIX);
+            const prefixes = await get(KEYWORDS.PREFIX);
+            const suffixes = await get(KEYWORDS.SUFFIX);
 
             for(const prefix of prefixes){
                 const prefixText = prefix.text;

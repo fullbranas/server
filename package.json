@@ -21,6 +21,7 @@
   "homepage": "https://github.com/fullbranas/server#readme",
   "dependencies": {
     "apollo-server": "^3.5.0",
-    "graphql": "^16.2.0"
+    "graphql": "^16.2.0",
+    "pg": "^8.7.1"
   }
 }
